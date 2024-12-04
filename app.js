@@ -34,17 +34,6 @@ app.get("/accounts", (req, res) => {
   res.json(accounts);
 });
 
-app.get("/accounts/:accountId", (req, res) => {
-  const { accountId } = req.params;
-  const account = accounts.find((account) => account.id == accountId);
-  console.log(account);
-  if (account) {
-    res.status(200).json(account);
-  } else {
-    res.status(404).json();
-  }
-});
-
 app.put("/accounts/:accountId", (req, res) => {
   const { accountId } = req.params;
   const account = accounts.find((account) => account.id == accountId);
@@ -71,6 +60,19 @@ app.delete("/accounts/:accountId", (req, res) => {
 app.post("/accounts", (req, res) => {
   const newAccount = createNewAccount(req.body);
   res.status(201).json(newAccount);
+});
+
+app.get("/accounts/:accountUsername", (req, res) => {
+  const { accountUsername } = req.params;
+  const userAccount = accounts.find(
+    (account) => account.username === accountUsername
+  );
+  console.log(userAccount);
+  if (userAccount) {
+    res.status(200).json(userAccount);
+  } else {
+    res.status(404).json();
+  }
 });
 
 app.listen(port, () => {
