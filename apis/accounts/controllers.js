@@ -1,7 +1,13 @@
 const accounts = require("../../accounts");
+const Account = require("../../models/Account");
 
-exports.listAccountController = (req, res) => {
-  res.json(accounts);
+exports.listAccountController = async (req, res) => {
+  try {
+    const accounts = await Account.find();
+    res.json(accounts);
+  } catch (e) {
+    res.status(500).json({ Message: e.Message });
+  }
 };
 
 exports.accountUsernameController = (req, res) => {
@@ -18,32 +24,41 @@ exports.accountUsernameController = (req, res) => {
 };
 
 const createNewAccount = (newAccountData) => {
-  //post
+  post;
   console.log("Creating new account", newAccountData);
   const newId = accounts.length + 1;
   const newAccount = Object.assign({ id: newId }, newAccountData);
   console.log("The new account is: ", newAccount);
   return newAccount;
 };
-exports.createNewAccountController = (req, res) => {
-  const newAccount = createNewAccount(req.body);
-  res.status(201).json(newAccount);
+
+exports.createNewAccountController = async (req, res) => {
+  try {
+    const newAccount = await Account.create(req.body);
+    res.status(201).json(newAccount);
+  } catch (e) {
+    res.status(500).json({ Message: e.Message });
+  }
 };
 
 const updateAccount = (currentAccount, newData) => {
-  //put
+  put;
   const updatedAccount = Object.assign(currentAccount, newData);
   return updatedAccount;
 };
-exports.updateAccountController = (req, res) => {
+
+exports.updateAccountController = async (req, res) => {
   const { accountId } = req.params;
-  const account = accounts.find((account) => account.id == accountId);
-  console.log(account);
-  if (account) {
-    const updatedAccount = updateAccount(account, req.body);
-    res.status(200).json(updatedAccount);
-  } else {
-    res.status(404).json();
+  try {
+    const foundAccount = await Account.findById(accountId);
+    if (foundAccount) {
+      await foundAccount.updateOne(req.body);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Account not found" });
+    }
+  } catch (e) {
+    res.status(500).json({ Message: e.Message });
   }
 };
 
@@ -54,13 +69,17 @@ const deleteAccount = (accountIdToBeDeleted) => {
   );
   console.log("The new accounts are: ", newAccounts);
 };
-exports.deleteAccountController = (req, res) => {
+exports.deleteAccountController = async (req, res) => {
   const { accountId } = req.params;
-  const account = accounts.find((account) => account.id == accountId);
-  if (account) {
-    deleteAccount(accountId);
-    res.status(204).end();
-  } else {
-    res.status(404).json();
+  try {
+    const foundAccount = await Account.findById(accountId);
+    if (foundAccount) {
+      await foundAccount.remove(req.body);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ message: "Account not found" });
+    }
+  } catch (e) {
+    res.status(500).json({ Message: e.Message });
   }
 };

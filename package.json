@@ -1,14 +1,15 @@
 {
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3"
   },
   "name": "task-express-m1-intro-crud-banks",
   "version": "1.0.0",
   "description": "In this task, you will create a banking API with the basic `CRUD` operations.",
   "main": "accounts.js",
-  "devDependencies": {},
   "scripts": {
-"start": "nodemon app.js",    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
